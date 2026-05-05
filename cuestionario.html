@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { text-align: center; background-color: #eef; padding: 100px; }
+        .btn { width: 200px; height: 200px; font-size: 100px; border: none; border-radius: 50%; cursor: pointer; margin: 20px; }
+        .si { background-color: #4CAF50; color: white; }
+        .no { background-color: #f44336; color: white; }
+    </style>
+</head>
+<body>
+    <h1 id="pregunta">¿El perro es de color verde?</h1>
+    
+    <button class="btn si" onclick="responder(true)">✔</button>
+    <button class="btn no" onclick="responder(false)">✘</button>
+
+    <script>
+        // Hablar la pregunta automáticamente al cargar
+        window.onload = () => {
+            const texto = document.getElementById("pregunta").innerText;
+            const voz = new SpeechSynthesisUtterance(texto);
+            voz.lang = 'es-ES';
+            window.speechSynthesis.speak(voz);
+        };
+
+        function responder(esCorrecto) {
+            let sonido = esCorrecto ? "¡Muy bien! " : "Inténtalo de nuevo. ";
+            const resp = new SpeechSynthesisUtterance(sonido);
+            resp.lang = 'es-ES';
+            window.speechSynthesis.speak(resp);
+        }
+    </script>
+</body>
+</html>
