@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Plataforma de Libros</title>
+    <style>
+        body { font-family: Arial; text-align: center; background-color: #f4f4f4; padding: 50px; }
+        h1 { color: #333; font-size: 3em; }
+        .contenedor { display: flex; justify-content: center; gap: 30px; }
+        .libro { 
+            background: white; padding: 20px; border-radius: 20px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s;
+        }
+        .libro:hover { transform: scale(1.1); border: 5px solid #4CAF50; }
+        img { width: 250px; border-radius: 10px; }
+        p { font-size: 1.5em; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>Toca un libro para leer</h1>
+
+    <div class="contenedor">
+        <div class="libro" onclick="narrarYAbrir('Libro de los Animales', 'cuestionario.html')">
+            <img src="https://via.placeholder.com/250x350?text=ANIMALES" alt="Animales">
+            <p>Animales</p>
+        </div>
+    </div>
+
+    <script>
+        // Esta función hace que la computadora hable para el usuario
+        function narrarYAbrir(titulo, url) {
+            const mensaje = new SpeechSynthesisUtterance("Has elegido el " + titulo + ". Vamos a responder unas preguntas.");
+            mensaje.lang = 'es-ES';
+            window.speechSynthesis.speak(mensaje);
+            
+            // Espera a que termine de hablar y cambia de página
+            setTimeout(() => { window.location.href = url; }, 3000);
+        }
+    </script>
+</body>
+</html>
