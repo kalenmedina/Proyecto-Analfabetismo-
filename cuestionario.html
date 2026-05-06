@@ -2,34 +2,92 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <title>Cuestionario Divertido</title>
     <style>
-        body { text-align: center; background-color: #eef; padding: 100px; }
-        .btn { width: 200px; height: 200px; font-size: 100px; border: none; border-radius: 50%; cursor: pointer; margin: 20px; }
-        .si { background-color: #4CAF50; color: white; }
-        .no { background-color: #f44336; color: white; }
+        body { font-family: Arial; text-align: center; background-color: #fff9c4; padding: 20px; }
+        #pregunta-texto { font-size: 3em; color: #5d4037; margin-bottom: 40px; min-height: 120px; }
+        .opciones { display: flex; justify-content: center; gap: 40px; }
+        .boton-opcion { 
+            width: 250px; height: 250px; font-size: 120px; border: none; 
+            border-radius: 40px; cursor: pointer; box-shadow: 0 10px #999;
+            transition: 0.2s;
+        }
+        .boton-opcion:active { box-shadow: 0 5px #666; transform: translateY(5px); }
+        .verde { background-color: #4caf50; }
+        .rojo { background-color: #f44336; }
+        #progreso { font-size: 1.5em; margin-top: 30px; color: #795548; }
     </style>
 </head>
 <body>
-    <h1 id="pregunta">¿El perro es de color verde?</h1>
+
+    <div id="progreso">Pregunta 1 de 3</div>
+    <div id="pregunta-texto">Cargando pregunta...</div>
     
-    <button class="btn si" onclick="responder(true)">✔</button>
-    <button class="btn no" onclick="responder(false)">✘</button>
+    <div class="opciones">
+        <button class="boton-opcion verde" onclick="verificar(true)">✔</button>
+        <button class="boton-opcion rojo" onclick="verificar(false)">✘</button>
+    </div>
 
     <script>
-        // Hablar la pregunta automáticamente al cargar
-        window.onload = () => {
-            const texto = document.getElementById("pregunta").innerText;
-            const voz = new SpeechSynthesisUtterance(texto);
-            voz.lang = 'es-ES';
-            window.speechSynthesis.speak(voz);
+        const bancoPreguntas = {
+            animales: [
+                { q: "¿El león dice miau?", a: false },
+                { q: "¿Los pájaros vuelan?", a: true },
+                { q: "¿El elefante es pequeño?", a: false }
+            ],
+            frutas: [
+                { q: "¿La manzana es de color rojo?", a: true },
+                { q: "¿El plátano es azul?", a: false },
+                { q: "¿La uva es una fruta?", a: true }
+            ],
+            casa: [
+                { q: "¿Dormimos en la cama?", a: true },
+                { q: "¿La sopa se come con tenedor?", a: false },
+                { q: "¿La silla sirve para sentarse?", a: true }
+            ]
         };
 
-        function responder(esCorrecto) {
-            let sonido = esCorrecto ? "¡Muy bien! " : "Inténtalo de nuevo. ";
-            const resp = new SpeechSynthesisUtterance(sonido);
-            resp.lang = 'es-ES';
-            window.speechSynthesis.speak(resp);
+        let indice = 0;
+        let tema = localStorage.getItem('temaActual') || 'animales';
+        let preguntas = bancoPreguntas[tema];
+
+        function cargarPregunta() {
+            if (indice < preguntas.length) {
+                document.getElementById('progreso').innerText = `Pregunta ${indice + 1} de ${preguntas.length}`;
+                const texto = preguntas[indice].q;
+                document.getElementById('pregunta-texto').innerText = texto;
+                
+                const voz = new SpeechSynthesisUtterance(texto);
+                voz.lang = 'es-ES';
+                window.speechSynthesis.speak(voz);
+            } else {
+                finalizar();
+            }
         }
+
+        function verificar(respuestaUsuario) {
+            if (respuestaUsuario === preguntas[indice].a) {
+                const acierto = new SpeechSynthesisUtterance("¡Muy bien! Correcto.");
+                acierto.lang = 'es-ES';
+                window.speechSynthesis.speak(acierto);
+                indice++;
+                setTimeout(cargarPregunta, 2000);
+            } else {
+                const error = new SpeechSynthesisUtterance("Eso no es correcto, intenta otra vez.");
+                error.lang = 'es-ES';
+                window.speechSynthesis.speak(error);
+            }
+        }
+
+        function finalizar() {
+            document.getElementById('pregunta-texto').innerText = "¡Felicidades! Terminaste.";
+            const fin = new SpeechSynthesisUtterance("¡Felicidades! Has completado este libro. Volvamos al inicio.");
+            fin.lang = 'es-ES';
+            window.speechSynthesis.speak(fin);
+            setTimeout(() => { window.location.href = 'index.html'; }, 4000);
+        }
+
+        window.onload = cargarPregunta;
     </script>
 </body>
 </html>
