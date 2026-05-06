@@ -2,40 +2,52 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Plataforma de Libros</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Biblioteca Mágica</title>
     <style>
-        body { font-family: Arial; text-align: center; background-color: #f4f4f4; padding: 50px; }
-        h1 { color: #333; font-size: 3em; }
-        .contenedor { display: flex; justify-content: center; gap: 30px; }
-        .libro { 
-            background: white; padding: 20px; border-radius: 20px; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s;
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #e0f7fa; margin: 0; padding: 20px; }
+        h1 { color: #00796b; font-size: 3.5em; text-shadow: 2px 2px #fff; }
+        .contenedor-libros { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-top: 50px; }
+        .tarjeta-libro { 
+            background: white; border-radius: 30px; padding: 20px; width: 280px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2); cursor: pointer; transition: 0.3s;
+            border: 8px solid transparent;
         }
-        .libro:hover { transform: scale(1.1); border: 5px solid #4CAF50; }
-        img { width: 250px; border-radius: 10px; }
-        p { font-size: 1.5em; font-weight: bold; }
+        .tarjeta-libro:hover { transform: translateY(-15px); border-color: #ffb300; }
+        .icono { font-size: 80px; margin-bottom: 10px; }
+        .titulo-libro { font-size: 1.8em; font-weight: bold; color: #333; }
     </style>
 </head>
 <body>
 
-    <h1>Toca un libro para leer</h1>
+    <h1>¿Qué quieres aprender hoy?</h1>
 
-    <div class="contenedor">
-        <div class="libro" onclick="narrarYAbrir('Libro de los Animales', 'cuestionario.html')">
-            <img src="https://via.placeholder.com/250x350?text=ANIMALES" alt="Animales">
-            <p>Animales</p>
+    <div class="contenedor-libros">
+        <div class="tarjeta-libro" onclick="elegirTema('animales', '🐶')">
+            <div class="icono">🐶</div>
+            <div class="titulo-libro">Animales</div>
+        </div>
+
+        <div class="tarjeta-libro" onclick="elegirTema('frutas', '🍎')">
+            <div class="icono">🍎</div>
+            <div class="titulo-libro">Frutas</div>
+        </div>
+
+        <div class="tarjeta-libro" onclick="elegirTema('casa', '🏠')">
+            <div class="icono">🏠</div>
+            <div class="titulo-libro">La Casa</div>
         </div>
     </div>
 
     <script>
-        // Esta función hace que la computadora hable para el usuario
-        function narrarYAbrir(titulo, url) {
-            const mensaje = new SpeechSynthesisUtterance("Has elegido el " + titulo + ". Vamos a responder unas preguntas.");
+        function elegirTema(tema, icono) {
+            const mensaje = new SpeechSynthesisUtterance("Has elegido el tema de " + tema + ". ¡Comencemos!");
             mensaje.lang = 'es-ES';
             window.speechSynthesis.speak(mensaje);
             
-            // Espera a que termine de hablar y cambia de página
-            setTimeout(() => { window.location.href = url; }, 3000);
+            // Guardamos el tema elegido para que la siguiente página sepa qué preguntar
+            localStorage.setItem('temaActual', tema);
+            setTimeout(() => { window.location.href = 'cuestionario.html'; }, 2500);
         }
     </script>
 </body>
